@@ -19,6 +19,9 @@ class KenanteSession : KenanteWsConnEventListener {
     private var isSessionCreated = false
     internal var startSessionListener: SessionEventListener? = null
     internal var roomId = 0
+    internal var audio = false
+    internal var video = false
+    internal var bitrate = KenanteBitrate.low
     internal var currentUserId = 0
     internal var sessionOngoing = false
     internal var handler = Handler(KenanteSettings.getInstance().getContext()?.mainLooper!!)
@@ -65,8 +68,11 @@ class KenanteSession : KenanteWsConnEventListener {
     }
 
     //This method start conference call
-    fun startCall(roomId: Int) {
+    fun startCall(roomId: Int, audio: Boolean, video: Boolean, bitrate: KenanteBitrate) {
         this.roomId = roomId
+        this.audio = audio
+        this.video = video
+        this.bitrate = bitrate
         for ((_, value) in pluginHandles) {
             if (value.id == currentUserId) {
                 val role = if (value.isPublisher!!) {
@@ -90,11 +96,11 @@ class KenanteSession : KenanteWsConnEventListener {
 
     fun configureUser(
             userId: Int,
-            audioCodec: KenanteAudioCodec,
-            videoCodec: KenanteVideoCodec,
+            audio: Boolean,
+            video: Boolean,
             bitrate: KenanteBitrate
     ) {
-        KenanteUsers.setUserCallParameters(userId, audioCodec, videoCodec, bitrate)
+        KenanteUsers.setUserCallParameters(userId, audio, video, bitrate)
     }
 
     fun leave() {

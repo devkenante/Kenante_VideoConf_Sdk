@@ -12,26 +12,26 @@ object KenanteUsers {
     internal val liveUsers = mutableListOf<Int>()
 
     fun setUserCallParameters(
-        id: Int,
-        audioCodec: KenanteAudioCodec,
-        videoCodec: KenanteVideoCodec,
-        bitrate: KenanteBitrate
+            id: Int,
+            audio: Boolean,
+            video: Boolean,
+            bitrate: KenanteBitrate
     ) {
-        users[id] = User(audioCodec, videoCodec, bitrate)
+        users[id] = User(audio, video, bitrate)
     }
 
-    fun getUser(id: Int) : User?{
+    fun getUser(id: Int): User? {
         return users[id]
     }
 
     fun setUsersContainer(user: Int) {
-        users[user] = User(KenanteAudioCodec.opus, KenanteVideoCodec.vp8, KenanteBitrate.low)
+        users[user] = User(audio = true, video = true, bitrate = KenanteBitrate.low)
     }
 
 }
 
 data class User(
-    var audioCodec: KenanteAudioCodec = KenanteAudioCodec.opus,
-    var videoCodec: KenanteVideoCodec = KenanteVideoCodec.vp8,
-    var bitrate: KenanteBitrate = KenanteBitrate.low
+        var audio: Boolean,
+        var video: Boolean,
+        var bitrate: KenanteBitrate = KenanteBitrate.low
 )

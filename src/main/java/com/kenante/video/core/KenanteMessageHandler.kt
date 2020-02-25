@@ -159,14 +159,12 @@ object KenanteMessageHandler : KenanteCallEventListener {
             KenanteSession.handleId = handleId
             val kenantePluginHandler = KenantePluginHandler()
             kenantePluginHandler.handleId = handleId
-            //Todo: Add publisher details received from backend
-            //Currently dummy details are entered for testing
             kenantePluginHandler.id = userId
             kenantePluginHandler.audioCodec = KenanteAudioCodec.opus
             kenantePluginHandler.videoCodec = KenanteVideoCodec.vp8
-            kenantePluginHandler.bitrate = KenanteBitrate.low
-            kenantePluginHandler.audio = true
-            kenantePluginHandler.video = true
+            kenantePluginHandler.bitrate = KenanteSession.getInstance().bitrate
+            kenantePluginHandler.audio = KenanteSession.getInstance().audio
+            kenantePluginHandler.video = KenanteSession.getInstance().video
             kenantePluginHandler.isPublisher = true
 
             KenanteUsers.setUsersContainer(userId)
@@ -182,16 +180,22 @@ object KenanteMessageHandler : KenanteCallEventListener {
         } else {
             val kenantePluginHandler = KenantePluginHandler()
             kenantePluginHandler.handleId = handleId
-            //Todo: Add subscriber details received from backend
-            //Currently dummy details are entered for testing
             kenantePluginHandler.id = userId
-            //kenantePluginHandler.audioCodec = KenanteUsers.getUser(userId)?.audioCodec!!
-            //kenantePluginHandler.videoCodec = KenanteUsers.getUser(userId)?.videoCodec!!
             kenantePluginHandler.audioCodec = KenanteAudioCodec.opus
             kenantePluginHandler.videoCodec = KenanteVideoCodec.vp8
-            kenantePluginHandler.bitrate = KenanteBitrate.low
-            kenantePluginHandler.audio = true
-            kenantePluginHandler.video = true
+            // Default values
+            var bitrate = KenanteBitrate.low
+            var audio = true
+            var video = true
+            val user = KenanteUsers.getUser(userId)
+            if(user != null){
+                bitrate = user.bitrate
+                audio = user.audio
+                video = user.video
+            }
+            kenantePluginHandler.bitrate = bitrate
+            kenantePluginHandler.audio = audio
+            kenantePluginHandler.video = video
             kenantePluginHandler.isPublisher = false
 
             KenanteUsers.setUsersContainer(userId)
